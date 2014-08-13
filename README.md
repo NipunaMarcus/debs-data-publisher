@@ -6,12 +6,12 @@ WSO2 BAM data publisher for DEBS usecase
 Building project from source
 ----------------------------
 
-> mvn clean install
+$ mvn clean install
 
 Publishing data
 ---------------
 
-> sh publish.sh [1] [2] [3] [4] [5] [6]
+$ ./publish.sh [1] [2] [3] [4] [5] [6]
 
 [1] - server url
 [2] - username
