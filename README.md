@@ -3,7 +3,15 @@ debs-data-publisher
 
 WSO2 BAM data publisher for DEBS usecase
 
-USAGE: ./publish.sh [1] [2] [3] [4] [5] [6]
+Building project from source
+----------------------------
+
+> mvn clean install
+
+Publishing data
+---------------
+
+> sh /publish.sh [1] [2] [3] [4] [5] [6]
 
 [1] - server url
 [2] - username
