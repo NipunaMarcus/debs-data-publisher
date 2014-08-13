@@ -11,7 +11,7 @@ Building project from source
 Publishing data
 ---------------
 
-> sh /publish.sh [1] [2] [3] [4] [5] [6]
+> sh publish.sh [1] [2] [3] [4] [5] [6]
 
 [1] - server url
 [2] - username
