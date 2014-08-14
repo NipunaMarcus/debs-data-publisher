@@ -5,11 +5,11 @@ WSO2 BAM data publisher for DEBS usecase
 
 ###Usage
 
--Building project from source
+ - Building project from source
 
   ```$ mvn clean install```
 
--Publishing data
+ - Publishing data
 
   ```$ ./publish.sh [1] [2] [3] [4] [5] [6]```
   ```
