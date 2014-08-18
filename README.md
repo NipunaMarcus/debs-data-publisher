@@ -1,7 +1,7 @@
 debs-data-publisher
 ===================
 
-WSO2 BAM data publisher for DEBS usecase
+WSO2 BAM data publisher for DEBS 2014 usecase
 
 ###Usage
 
