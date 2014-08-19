@@ -14,7 +14,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS DEBSCassandraTable (key STRING, id STRING, t
 'org.apache.hadoop.hive.cassandra.CassandraStorageHandler' WITH SERDEPROPERTIES (
 "wso2.carbon.datasource.name" = "WSO2BAM_CASSANDRA_EVENT_SOURCE",
 "cassandra.cf.name" = "debs_data",
-"cassandra.columns.mapping" = ":key,payload_id,payload_timestamp,payload_value,payload_property,payload_plug_id,payload_household_id,payload_house_id,meta_publisher" );                                   
+"cassandra.columns.mapping" = ":key,payload_id,payload_timestamp,payload_value,payload_property,payload_plug_id,payload_household_id,payload_house_id,meta_publisher" );                               
 
 -- ---------  Query 1 - Houses/households using more than 28 units  -----------------------------------------------------------------------------------------------------------------------
 
@@ -29,11 +29,11 @@ insert overwrite table DEBSTable1 select id, house_id, household_id, value, from
 
 -- ---------  Query 2 - Households with more than 3 plugs  -----------------------------------------------------------------------------------------------------------------------
 
-CREATE EXTERNAL TABLE IF NOT EXISTS DEBSTable2(id STRING, house_id STRING, household_id STRING, plug_id INT) 
+CREATE EXTERNAL TABLE IF NOT EXISTS DEBSTable2(house_id STRING, household_id STRING, plugs INT) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'wso2.carbon.datasource.name'='WSO2BAM_DATASOURCE',
 'hive.jdbc.update.on.duplicate' = 'true',
-'hive.jdbc.primary.key.fields' = 'id',
-'hive.jdbc.table.create.query' = 'CREATE TABLE DEBS_Table_2 ( id VARCHAR(50), house_id VARCHAR(50), household_id VARCHAR(50), plugs INT)' );
+'hive.jdbc.primary.key.fields' = 'house_id,household_id',
+'hive.jdbc.table.create.query' = 'CREATE TABLE DEBS_Table_2 ( house_id VARCHAR(50), household_id VARCHAR(50), plugs INT)' );
 
 insert overwrite table DEBSTable2 select house_id, household_id, count(distinct plug_id) as plugs from DEBSCassandraTable group by house_id, household_id having count(distinct plug_id) > 3;
