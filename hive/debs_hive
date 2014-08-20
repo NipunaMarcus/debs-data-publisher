@@ -50,3 +50,14 @@ STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPE
 'hive.jdbc.table.create.query' = 'CREATE TABLE DEBS_Table_3 ( house_id VARCHAR(50), household_id VARCHAR(50), max_usage FLOAT, time_stamp VARCHAR(50))' );
 
 INSERT OVERWRITE TABLE DEBSTable3 SELECT a.house_id, a.household_id, b.max_usage, from_unixtime(a.time_stamp, 'yyyy-MM-dd HH:mm:ss') AS time_stamp FROM DEBSCassandraTable a INNER JOIN (SELECT house_id, household_id, max(value) AS max_usage FROM DEBSCassandraTable WHERE property = 1 GROUP BY house_id, household_id) b ON a.house_id = b.house_id AND a.household_id = b.household_id AND a.value = b.max_usage GROUP BY a.house_id, a.household_id, from_unixtime(a.time_stamp, 'yyyy-MM-dd HH:mm:ss'), b.max_usage;
+
+/* ================  Query 4 - The plug that recorded the least usage per household among all houses ======================================================================== */
+
+CREATE EXTERNAL TABLE IF NOT EXISTS DEBSTable4(house_id STRING, household_id STRING, plug_id STRING, min_usage FLOAT) 
+STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
+'wso2.carbon.datasource.name'='WSO2BAM_DATASOURCE',
+'hive.jdbc.update.on.duplicate' = 'true',
+'hive.jdbc.primary.key.fields' = 'house_id,household_id,plug_id',
+'hive.jdbc.table.create.query' = 'CREATE TABLE DEBS_Table_4 ( house_id VARCHAR(50), household_id VARCHAR(50), plug_id VARCHAR(50), min_usage FLOAT)' );
+
+INSERT OVERWRITE TABLE DEBSTable4 SELECT a.house_id, a.household_id, a.plug_id, b.min_usage FROM DEBSCassandraTable a INNER JOIN (SELECT house_id, household_id, min(value) AS min_usage FROM DEBSCassandraTable WHERE property = 1 GROUP BY house_id, household_id) b ON a.house_id = b.house_id AND a.household_id = b.household_id AND a.value = b.min_usage GROUP BY a.house_id, a.household_id, a.plug_id, b.min_usage;
