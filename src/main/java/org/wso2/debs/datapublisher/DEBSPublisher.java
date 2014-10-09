@@ -1,9 +1,12 @@
 package org.wso2.debs.datapublisher;
 
 
-import org.wso2.carbon.databridge.agent.thrift.AsyncDataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.Agent;
+import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
 import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
 import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.exception.NoStreamDefinitionExistException;
 
 import java.io.*;
 import java.net.Inet4Address;
@@ -36,12 +39,19 @@ public class DEBSPublisher {
         String file = args[3];
         count = Integer.parseInt(args[4]);
 
+        String streamId;
+
         System.out.println("Initialized DEBS data publisher on " + server + " with " + count + " records to write");
 
         System.setProperty("javax.net.ssl.trustStore", "./src/main/resources/truststore/client-truststore.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
-        AsyncDataPublisher dataPublisher = new AsyncDataPublisher("tcp://" + server, username, password);
+        AgentConfiguration agentConfiguration = new AgentConfiguration();
+        agentConfiguration.setBufferedEventsSize(50000);
+
+        Agent agent = new Agent(agentConfiguration);
+
+        DataPublisher dataPublisher = new DataPublisher("tcp://" + server, username, password, agent);
 
         String definition = "{" +
                 "  'name':'" + DEBS_DATA_STREAM + "'," +
@@ -62,22 +72,25 @@ public class DEBSPublisher {
                 "  ]" +
                 "}";
 
-        if (!(dataPublisher.isStreamDefinitionAdded(DEBS_DATA_STREAM, VERSION))) {
-            dataPublisher.addStreamDefinition(definition, DEBS_DATA_STREAM, VERSION);
+        try {
+            streamId = dataPublisher.findStream(DEBS_DATA_STREAM, VERSION);
+            //Stream already defined
+
+        } catch (NoStreamDefinitionExistException e) {
+            streamId = dataPublisher.defineStream(definition);
+            System.out.println("Defining new stream for " + DEBS_DATA_STREAM);
         }
 
-        publishEvents(dataPublisher, file);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw e;
+        if (!streamId.isEmpty()) {
+            publishEvents(dataPublisher, streamId, file);
+        } else {
+            System.out.println("No events published.");
         }
 
         dataPublisher.stop();
     }
 
-    private static void publishEvents(AsyncDataPublisher asyncDataPublisher, String file) throws FileNotFoundException {
+    private static void publishEvents(DataPublisher dataPublisher, String streamId, String file) throws FileNotFoundException {
 
         BufferedReader br;
         FileReader fr;
@@ -102,10 +115,11 @@ public class DEBSPublisher {
                             data[4], data[5], data[6]
                     };
 
-                    Event event = eventObject(null, new Object[]{host}, payload);
-                    asyncDataPublisher.publish(DEBS_DATA_STREAM, VERSION, event);
+                    //constructor used: Event(streamID, timeStamp, metaArray, correlationArray, payloadArray)
+                    Event event = new Event(streamId, System.currentTimeMillis(), new Object[]{host}, null, payload);
+                    dataPublisher.publish(event);
                     ctr++;
-                    if(count > 0){
+                    if (count > 0) {
                         if (ctr == count) {
                             break;
                         }
@@ -127,15 +141,6 @@ public class DEBSPublisher {
         } else {
             throw new FileNotFoundException("target file not found!");
         }
-    }
-
-
-    private static Event eventObject(Object[] correlationData, Object[] metaData, Object[] payLoadData) {
-        Event event = new Event();
-        event.setCorrelationData(correlationData);
-        event.setMetaData(metaData);
-        event.setPayloadData(payLoadData);
-        return event;
     }
 
     private static InetAddress getLocalAddress() throws SocketException {
