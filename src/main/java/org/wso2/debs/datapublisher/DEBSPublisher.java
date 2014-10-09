@@ -50,7 +50,7 @@ public class DEBSPublisher {
         agentConfiguration.setBufferedEventsSize(50000);
 
         Agent agent = new Agent(agentConfiguration);
-
+        //using datapublisher
         DataPublisher dataPublisher = new DataPublisher("tcp://" + server, username, password, agent);
 
         String definition = "{" +
