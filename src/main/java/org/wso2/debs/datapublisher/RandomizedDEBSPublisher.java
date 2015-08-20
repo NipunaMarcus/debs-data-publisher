@@ -37,8 +37,7 @@ public class RandomizedDEBSPublisher {
         String server = args[0];
         String username = args[1];
         String password = args[2];
-        String file = args[3];
-        count = Integer.parseInt(args[4]);
+        count = Integer.parseInt(args[3]);
 
         String streamId;
 
@@ -83,7 +82,7 @@ public class RandomizedDEBSPublisher {
         }
 
         if (!streamId.isEmpty()) {
-            publishEvents(dataPublisher, streamId, file);
+            publishEvents(dataPublisher, streamId);
         } else {
             System.out.println("No events published.");
         }
@@ -91,7 +90,7 @@ public class RandomizedDEBSPublisher {
         dataPublisher.stop();
     }
 
-    private static void publishEvents(DataPublisher dataPublisher, String streamId, String file) {
+    private static void publishEvents(DataPublisher dataPublisher, String streamId) {
         String host;
         Random rand = new Random();
 
