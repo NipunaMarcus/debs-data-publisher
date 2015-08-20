@@ -1,7 +1,7 @@
 debs-data-publisher
 ===================
 
-Data publisher for DEBS 2014 usecase
+Data publisher for DEBS 2014 usecase, compatible with DAS 3.0.0 onwards
 
 ###Usage
 
