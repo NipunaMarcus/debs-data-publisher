@@ -110,7 +110,6 @@ public class NewDEBSAgent {
                     //constructor used: Event(streamID, timeStamp, metaArray, correlationArray, payloadArray)
                     Event event = new Event(streamId, System.currentTimeMillis(), new Object[]{host}, null, payload);
 
-                    System.out.println("Publishing event");
                     dataPublisher.publish(event);
                     ctr++;
                     if (count > 0) {
