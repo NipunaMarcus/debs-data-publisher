@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>debs-data-publisher</artifactId>
-	<packaging>jar</packaging>
-	<groupId>org.wso2.bam.debs.datapublisher</groupId>
-	<name>DEBS Data Publisher</name>
-	<version>1.0.0</version>
-	<description>DEBS Data Publisher</description>
-	<url>http://wso2.org</url>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>debs-data-publisher-randomized</artifactId>
+    <packaging>jar</packaging>
+    <groupId>org.wso2.bam.debs.datapublisher</groupId>
+    <name>Randomized DEBS Data Publisher</name>
+    <version>1.0.0</version>
+    <description>DEBS Data Publisher with randomized event generation</description>
+    <url>http://wso2.org</url>
 
     <repositories>
         <repository>
-            <id>org.wso2.carbon</id> <url>http://dist.wso2.org/maven2/</url>
+            <id>org.wso2.carbon</id>
+            <url>http://dist.wso2.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -52,7 +54,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.wso2.debs.datapublisher.DEBSPublisher</mainClass>
+                            <mainClass>org.wso2.debs.datapublisher.RandomizedDEBSPublisher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
