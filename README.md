@@ -18,7 +18,7 @@ This publisher creates randomized data during runtime for publication.
   [1] - server url
   [2] - username
   [3] - password
-  [4] - count (# of records in file to be published). -1 for ALL records
+  [4] - count (# of records to be published)
   [5] - # of publishing jobs to run (publishers to be spawned)
   ```
 
